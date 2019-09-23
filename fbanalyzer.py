@@ -67,6 +67,8 @@ print('Finished processing chats...')
 
 # In[10]:
 
+emo_array = []
+# This outer for loop loops through each individual Person
 
 for i, (messages, chat, messages) in enumerate(sorted_chats):
     number_messages = {}
@@ -74,6 +76,15 @@ for i, (messages, chat, messages) in enumerate(sorted_chats):
     number_words = {}
 
     print(str(i) + " - " + str(len(messages)) + " messages - " + str(chat))
+
+    # this for loop loops through each message of each person
+
+    bang_count = 0.0
+    cap_count = 0.0
+    character_count = 0.0
+    bang_index = 0.0
+    cap_index = 0.0
+    emo_index = 0.0
 
     for message in messages:
         try:
@@ -84,6 +95,15 @@ for i, (messages, chat, messages) in enumerate(sorted_chats):
             number_messages[name] = number_messages.get(name, 0)
             number_messages[name] += 1
 
+            count = 0
+            while count < len(message_content) - 1:
+                if message_content[count] == '!':
+                    bang_count += 1
+                elif message_content[count].isupper():
+                    cap_count += 1
+                count += 1
+                character_count += 1
+
             person_to_times[name] = person_to_times.get(name, [])
             person_to_times[name].append(datetime.datetime.fromtimestamp(time / 1000.0))
 
@@ -93,6 +113,18 @@ for i, (messages, chat, messages) in enumerate(sorted_chats):
             # happens for special cases like users who deactivated, unfriended, blocked
             invalid_message_count += 1
 
+    bang_index = bang_count / character_count
+    cap_index = cap_count / character_count
+    emo_index = (cap_index + bang_index) * 1000
+    emo_index_int = 0
+    emo_index_int = emo_index
+    emo_array.append(emo_index_int)
+    print(character_count)
+    print(bang_count)
+    print(cap_count)
+    print(cap_index)
+    print(emo_index)
+
     final_data_messages[i] = number_messages
     final_data_times[i] = person_to_times
     final_data_words[i] = number_words
@@ -100,9 +132,11 @@ for i, (messages, chat, messages) in enumerate(sorted_chats):
 print('Found ' + str(invalid_message_count) + ' invalid messages...')
 print('Found ' + str(len(sorted_chats)) + ' chats with ' + str(MESSAGE_THRESHOLD) + ' messages or more')
 
+for item in emo_array:
+    print item
+
 
 # In[12]:
-
 
 def plot_num_messages(chat_number):
     plotted_data = final_data_messages[chat_number]
@@ -129,6 +163,17 @@ def plot_histogram_time(chat_number):
     pl.show()
 
 
+# def plot_emo_index(chat_number):
+    # x = ('Person 1', 'Person 2', 'Person 3', 'Person 4')
+    # pl.bar(x, emo_array, align='center', alpha=0.5)
+    # pl.xticks(x)
+    # pl.show()
+
+
+    # pl.title('Emotional Index for Each Person')
+    # pl.tight_layout()
+    # pl.show()
+
 # Counts the number of words
 
 def plot_histogram_words(chat_number):
@@ -154,3 +199,4 @@ def plot(chat_number):
 
 
 plot(0)
+# plot_emo_index(0)
