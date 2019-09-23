@@ -68,6 +68,7 @@ print('Finished processing chats...')
 # In[10]:
 
 emo_array = []
+names = []
 # This outer for loop loops through each individual Person
 
 for i, (messages, chat, messages) in enumerate(sorted_chats):
@@ -78,7 +79,7 @@ for i, (messages, chat, messages) in enumerate(sorted_chats):
     print(str(i) + " - " + str(len(messages)) + " messages - " + str(chat))
 
     # this for loop loops through each message of each person
-
+    names.append(str(chat))
     bang_count = 0.0
     cap_count = 0.0
     character_count = 0.0
@@ -117,7 +118,8 @@ for i, (messages, chat, messages) in enumerate(sorted_chats):
     cap_index = cap_count / character_count
     emo_index = (cap_index + bang_index) * 1000
     emo_index_int = 0
-    emo_index_int = emo_index
+    emo_index_int = round(emo_index)
+    int(emo_index_int)
     emo_array.append(emo_index_int)
     print(character_count)
     print(bang_count)
@@ -134,6 +136,8 @@ print('Found ' + str(len(sorted_chats)) + ' chats with ' + str(MESSAGE_THRESHOLD
 
 for item in emo_array:
     print item
+for do in names:
+    print do
 
 
 # In[12]:
@@ -163,18 +167,17 @@ def plot_histogram_time(chat_number):
     pl.show()
 
 
-# def plot_emo_index(chat_number):
-    # x = ('Person 1', 'Person 2', 'Person 3', 'Person 4')
-    # pl.bar(x, emo_array, align='center', alpha=0.5)
-    # pl.xticks(x)
-    # pl.show()
-
-
-    # pl.title('Emotional Index for Each Person')
-    # pl.tight_layout()
-    # pl.show()
+def plot_emo_index(chat_number):
+    left = np.arange(len(names))
+    pl.bar(left, emo_array)
+    pl.xlabel('Names', fontsize=5)
+    pl.ylabel('AEI (Arbitrary Emotional Index', fontsize=5)
+    pl.xticks(left, names, fontsize=5, rotation=30)
+    pl.title('How emotional conversations are with certain people')
+    pl.show()
 
 # Counts the number of words
+
 
 def plot_histogram_words(chat_number):
     temp = {}
@@ -193,10 +196,11 @@ def plot(chat_number):
     plot_num_messages(chat_number)
     plot_histogram_time(chat_number)
     plot_histogram_words(chat_number)
+    plot_emo_index(chat_number)
 
 
 # In[ ]:
 
 
 plot(0)
-# plot_emo_index(0)
+
